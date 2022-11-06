@@ -8,11 +8,26 @@ services:
     ports:
       - "8086:8086"
     volumes:
-      - "/mnt/docker/influxdb/:/var/lib/influxdb"
+      - "/mnt/docker/speedflux/influxdb/:/var/lib/influxdb"
     environment:
       - "INFLUXDB_ADMIN_USER=admin"
       - "INFLUXDB_ADMIN_PASSWORD=password"
       - "INFLUXDB_DB=speedtest"
+  grafana:
+    container_name: grafana
+    hostname: grafana
+    restart: always
+    image: grafana/grafana:latest
+    volumes:
+      - "/mnt/docker/speedflux/grafana/provisioning:/etc/grafana/provisioning"
+    ports:
+      - "80:3000"
+    environment:
+      - "GF_SERVER_ROOT_URL=http://localhost"
+      - "GF_SECURITY_ADMIN_PASSWORD=admin"
+      - "GF_AUTH_ANONYMOUS_ENABLED=true"
+    depends_on:
+      - influxdb
   speedflux:
     container_name: speedflux
     hostname: speedflux
@@ -31,20 +46,5 @@ services:
         - PING_TARGETS=1.1.1.1, 8.8.8.8 # csv of hostnames to ping
         - LOG_TYPE=info
     image: speedflux
-    depends_on:
-      - influxdb
-  grafana:
-    container_name: grafana
-    hostname: grafana
-    restart: always
-    image: grafana/grafana:latest
-    volumes:
-      - "/mnt/docker/grafana/provisioning:/etc/grafana/provisioning"
-    ports:
-      - "80:3000"
-    environment:
-      - "GF_SERVER_ROOT_URL=http://localhost"
-      - "GF_SECURITY_ADMIN_PASSWORD=admin"
-      - "GF_AUTH_ANONYMOUS_ENABLED=true"
     depends_on:
       - influxdb
