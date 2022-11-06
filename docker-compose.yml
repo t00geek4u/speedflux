@@ -1,18 +1,50 @@
 version: "3.9"
 services:
+  influxdb:
+    container_name: influxdb
+    hostname: influxdb
+    restart: always
+    image: influxdb:1.8
+    ports:
+      - "8086:8086"
+    volumes:
+      - "/mnt/docker/influxdb/:/var/lib/influxdb"
+    environment:
+      - "INFLUXDB_ADMIN_USER=admin"
+      - "INFLUXDB_ADMIN_PASSWORD=password"
+      - "INFLUXDB_DB=speedtest"
   speedflux:
+    container_name: speedflux
+    hostname: speedflux
     build: .
     environment: 
         - NAMESPACE= None
-        - INFLUX_DB_ADDRESS=[ip or hostname]
-        - INFLUX_DB_PORT=[8086]
-        - INFLUX_DB_USER=[db username]
-        - INFLUX_DB_PASSWORD=[db password]
+        - INFLUX_DB_ADDRESS=influxdb
+        - INFLUX_DB_PORT=8086
+        - INFLUX_DB_USER=admin
+        - INFLUX_DB_PASSWORD=password
         - INFLUX_DB_DATABASE=speedtest
-        - INFLUX_DB_TAGS=[select tags or empty] # See https://github.com/breadlysm/speedtest-to-influxdb#tag-options for details
-        - SPEEDTEST_INTERVAL=150 # Minutes between speedtest updates. 
-        - PING_INTERVAL=60 # Seconds between ping updates
+        - INFLUX_DB_TAGS=*
+        - SPEEDTEST_INTERVAL=5
+        - SPEEDTEST_HOST=51030
+        - PING_INTERVAL=60
         - PING_TARGETS=1.1.1.1, 8.8.8.8 # csv of hostnames to ping
         - LOG_TYPE=info
     image: speedflux
-  
+    depends_on:
+      - influxdb
+  grafana:
+    container_name: grafana
+    hostname: grafana
+    restart: always
+    image: grafana/grafana:latest
+    volumes:
+      - "/mnt/docker/grafana/provisioning:/etc/grafana/provisioning"
+    ports:
+      - "80:3000"
+    environment:
+      - "GF_SERVER_ROOT_URL=http://localhost"
+      - "GF_SECURITY_ADMIN_PASSWORD=admin"
+      - "GF_AUTH_ANONYMOUS_ENABLED=true"
+    depends_on:
+      - influxdb
