@@ -41,7 +41,7 @@ services:
         - INFLUX_DB_DATABASE=speedtest
         - INFLUX_DB_TAGS=*
         - SPEEDTEST_INTERVAL=60
-        - SPEEDTEST_SERVER_ID=29113,14774,51030,36684,1772,31448
+        - SPEEDTEST_SERVER_ID=29113,14774,51030,32940,36684,1772,31448
         - PING_INTERVAL=60
         - PING_TARGETS=1.1.1.1, 8.8.8.8 # csv of hostnames to ping
         - LOG_TYPE=info
