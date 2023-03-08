@@ -1,4 +1,4 @@
-
+Modified speedflux accepting multiple speedtest ids for testing on 
 
 
 # SpeedFlux <img src='https://user-images.githubusercontent.com/3665468/119735610-974a0500-be4a-11eb-9149-dd12ceee03df.png' width='75'>
