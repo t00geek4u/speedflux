@@ -1,4 +1,5 @@
-Modified speedflux accepting multiple speedtest ids for testing on 
+Modified speedflux accepting multiple speedtest ids for testing via env:SPEEDTEST_SERVER_ID
+Ex: SPEEDTEST_SERVER_ID=29113,14774,51030,32940,36684,1772
 
 
 # SpeedFlux <img src='https://user-images.githubusercontent.com/3665468/119735610-974a0500-be4a-11eb-9149-dd12ceee03df.png' width='75'>
